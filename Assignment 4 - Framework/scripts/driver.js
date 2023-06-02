@@ -6,6 +6,7 @@ MySample.main = (function() {
     let gl = canvas.getContext('webgl2');
 
 
+
     let vertices = new Float32Array([
         0.0, 0.5, 0.0,
         0.5, 0.0, 0.0,
@@ -36,7 +37,7 @@ MySample.main = (function() {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,null);
 
 
-    
+
 
     
     
