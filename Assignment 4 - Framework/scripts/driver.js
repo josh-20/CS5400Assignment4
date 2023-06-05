@@ -116,13 +116,13 @@ MySample.main = (function() {
     objectCube.parallel = new Float32Array([
         2.0/(r-t), 0, 0, -((l+r)/(r-l)),
         0, 2/(t-b), 0, -((t+b)/(t-b)),
-        0, 0, -(2/(f-n), -((f+n)/f-n)),
+        0, 0, -2/(f-n), -((f+n)/(f-n)),
         0, 0, 0, 1
     ]);
     objectCube.perspective = new Float32Array([
         n/0.5, 0.0, 0.0, 0.0,
         0.0, n/0.5, 0.0, 0.0,
-        0.0, 0.0, -(f+n)/(f+n), (-2.0*f*n)/(f-n),
+        0.0, 0.0, -((f+n)/(f+n)), (-2.0*f*n)/(f-n),
         0.0, 0.0, -1.0, 0.0
     ]);
     let mCameraView = new Uint32Array([
