@@ -38,11 +38,10 @@ MySample.main = (function() {
     let M = new Float32Array([
         1,0,0,0,
         0,1,0,0,
-        0,0,1,-1,
+        0,0,0,-1,
         0,0,0,1
     ]);
-
-    let uniform = multiplyMatrix4x4(M,objectCube.parallel)
+    let uniform = multiplyMatrix4x4(objectCube.parallel,M);
     let indices = new Uint16Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
     // Prepare vertex buffer
     let vertexBuffer = gl.createBuffer();
@@ -70,7 +69,7 @@ MySample.main = (function() {
     out vec4 vColor;
     void main()
     {
-    gl_Position = aPosition * uParallel;
+    gl_Position = uParallel * aPosition;
     vColor = aColor;
     }`;
     
