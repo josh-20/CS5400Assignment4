@@ -11,7 +11,6 @@ MySample.main = (function() {
         center: new Float32Array([0,0,-2]),
         parallel: new Float32Array([]),
         perspective: new Float32Array([]),
-
     };
     objectCube.vertices = new Float32Array([
         0.5, 0.5, 0.0, 1.0,
@@ -20,12 +19,6 @@ MySample.main = (function() {
         -0.5, -0.5, 0.0, 1.0,
         0.5, -0.5, 0.0, 1.0,
         0.5, 0.5, 0.0, 1.0, // End of Front ace
-        // 0.5, 0.5, 1.0, 1.0,
-        // -0.5, 0.5, 1.0, 1.0,
-        // -0.5, -0.5, 1.0, 1.0,
-        // -0.5, -0.5, 1.0, 1.0,
-        // 0.5, -0.5, 1.0, 1.0,
-        // 0.5, 0.5, 1.0, 1.0, // End of Back Face
     ]);
     objectCube.vertexColors = new Float32Array([
         1.0, 0.0, 0.0,
@@ -42,6 +35,14 @@ MySample.main = (function() {
         0, 0, 2/(objectCube.vertices[26] - objectCube.vertices[2]), -((objectCube.vertices[26]+objectCube.vertices[0])/(objectCube.vertices[26] - objectCube.vertices[0])),
         0, 0, 0, 1
     ]);
+    let M = new Float32Array([
+        1,0,0,0,
+        0,1,0,0,
+        0,0,1,-1,
+        0,0,0,1
+    ]);
+
+    let uniform = multiplyMatrix4x4(M,objectCube.parallel)
     let indices = new Uint16Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
     // Prepare vertex buffer
     let vertexBuffer = gl.createBuffer();
@@ -69,7 +70,7 @@ MySample.main = (function() {
     out vec4 vColor;
     void main()
     {
-    gl_Position = aPosition;
+    gl_Position = aPosition * uParallel;
     vColor = aColor;
     }`;
     
@@ -94,7 +95,7 @@ MySample.main = (function() {
     // Shader Program
     let shaderProgram = gl.createProgram();
     let location = gl.getUniformLocation(shaderProgram, 'uParallel');
-    gl.uniformMatrix4fv(location,false,transposeMatrix4x4(objectCube.parallel));
+    gl.uniformMatrix4fv(location,false,transposeMatrix4x4(uniform));
     gl.attachShader(shaderProgram, vertexShader);
     gl.attachShader(shaderProgram, fragmentShader);
     gl.linkProgram(shaderProgram);
