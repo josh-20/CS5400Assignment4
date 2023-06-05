@@ -131,7 +131,10 @@ MySample.main = (function() {
         0.0, 0.0, 1.0, 0.0,
         0.0, 0.0, 0.0, 1.0
 
-    ])
+    ]);
+    
+
+    objectCube.m
     let combinedMatrix = multiplyMatrix4x4(objectCube.parallel, mCameraView);
     let indices = new Uint16Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]);
     // Prepare vertex buffer
@@ -154,13 +157,13 @@ MySample.main = (function() {
 
     // Prepare Vertex Shader
     let vertexShaderSource = `#version 300 es
-    uniform mat4 uParallel;
+    uniform mat4 uCombined;
     in vec4 aPosition;
     in vec4 aColor;
     out vec4 vColor;
     void main()
     {
-    gl_Position = uParallel * aPosition;
+    gl_Position = uCombined * aPosition;
     vColor = aColor;
     }`;
 
@@ -190,7 +193,7 @@ MySample.main = (function() {
     gl.attachShader(shaderProgram, fragmentShader);
     gl.linkProgram(shaderProgram);
     gl.useProgram(shaderProgram);
-    let location = gl.getUniformLocation(shaderProgram, 'uParallel');
+    let location = gl.getUniformLocation(shaderProgram, 'uCombined');
     gl.uniformMatrix4fv(location,false,transposeMatrix4x4(combinedMatrix));
     
     // Specify Shader & Buffer objectCube Attributes
@@ -198,10 +201,6 @@ MySample.main = (function() {
     let position = gl.getAttribLocation(shaderProgram, 'aPosition');
     gl.enableVertexAttribArray(position);
     gl.vertexAttribPointer(position, 4, gl.FLOAT, false, objectCube.vertices.BYTES_PER_ELEMENT * 4, 0);
-    console.log(gl.getShaderInfoLog(vertexShader));
-    console.log(gl.getShaderInfoLog(fragmentShader));
-    console.log(gl.getProgramInfoLog(shaderProgram));   
-
 
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexColorBuffer);
     let color = gl.getAttribLocation(shaderProgram, 'aColor');
