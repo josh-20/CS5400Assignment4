@@ -114,7 +114,7 @@ MySample.main = (function() {
         0.0, 0.0, -(f+n)/(f+n), (-2.0*f*n)/(f-n),
         0.0, 0.0, -1.0, 0.0
     ]);
-    let mCameraView = new Uint32Array([
+    let mCameraView = new Float32Array([
         1.0, 0.0, 0.0, 0.0,
         0.0, 1.0, 0.0, 0.0,
         0.0, 0.0, 1.0, -1.0,
