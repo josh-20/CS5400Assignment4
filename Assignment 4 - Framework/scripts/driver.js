@@ -114,10 +114,10 @@ MySample.main = (function() {
         0.0, 0.0, -(f+n)/(f+n), (-2.0*f*n)/(f-n),
         0.0, 0.0, -1.0, 0.0
     ]);
-    let mCameraView = new Float32Array([
+    let mCameraView = new Uint32Array([
         1.0, 0.0, 0.0, 0.0,
         0.0, 1.0, 0.0, 0.0,
-        0.0, 0.0, 1.0, -1.0,
+        0.0, 0.0, 1.0, 0.0,
         0.0, 0.0, 0.0, 1.0
 
     ])
@@ -180,7 +180,7 @@ MySample.main = (function() {
     gl.linkProgram(shaderProgram);
     gl.useProgram(shaderProgram);
     let location = gl.getUniformLocation(shaderProgram, 'uParallel');
-    gl.uniformMatrix4fv(location,false,transposeMatrix4x4(objectCube.perspective));
+    gl.uniformMatrix4fv(location,false,transposeMatrix4x4(mCameraView));
     
     // Specify Shader & Buffer objectCube Attributes
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
