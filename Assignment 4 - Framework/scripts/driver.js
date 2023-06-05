@@ -108,6 +108,16 @@ MySample.main = (function() {
     ]);
     let n = -1.0;
     let f = -10.0;
+    let t = 0.5;
+    let b = -0.5;
+    let r = 0.5;
+    let l = -0.5;
+    objectCube.parallel = new Float32Array([
+        2.0/(r-t), 0, 0, -((l+r)/(r-l)),
+        0, 2/(t-b), 0, -((t+b)/(t-b)),
+        0, 0, -(2/(f-n), -((f+n)/f-n)),
+        0, 0, 0, 1
+    ]);
     objectCube.perspective = new Float32Array([
         n/0.5, 0.0, 0.0, 0.0,
         0.0, n/0.5, 0.0, 0.0,
@@ -121,7 +131,7 @@ MySample.main = (function() {
         0.0, 0.0, 0.0, 1.0
 
     ])
-
+    let combinedMatrix = multiplyMatrix4x4(objectCube.parallel, mCameraView);
     let indices = new Uint16Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]);
     // Prepare vertex buffer
     let vertexBuffer = gl.createBuffer();
@@ -180,7 +190,7 @@ MySample.main = (function() {
     gl.linkProgram(shaderProgram);
     gl.useProgram(shaderProgram);
     let location = gl.getUniformLocation(shaderProgram, 'uParallel');
-    gl.uniformMatrix4fv(location,false,transposeMatrix4x4(mCameraView));
+    gl.uniformMatrix4fv(location,false,transposeMatrix4x4(combinedMatrix));
     
     // Specify Shader & Buffer objectCube Attributes
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
