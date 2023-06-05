@@ -11,6 +11,7 @@ MySample.main = (function() {
         center: new Float32Array([0,0,-2]),
         parallel: new Float32Array([]),
         perspective: new Float32Array([]),
+        model: new Float32Array
     };
     // tetrahedron
     // -0.5, 0.0, 0.5, 1.0,
