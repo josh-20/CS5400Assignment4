@@ -106,19 +106,12 @@ MySample.main = (function() {
         0.0, 1.0, 0.0,
         1.0, 0.0, 0.0
     ]);
-    objectCube.parallel = new Uint32Array([
-        2/(0.5-(-0.5)), 0, 0, 0,
-        0, 2/(0.5-(-0.5)), 0, 0,
-        0, 0, 2/(1 - 0), -((1+0)/(1-0)),
-        0, 0, 0, 1
+    objectCube.projection = new Uint32Array([
+        1/0.5, 0, 0, 0,
+        0, 1/0.5, 0, 0,
+        0, 0, (-10+1)/(10+1), (-2*10*1)/(10-1),
+        0, 0, -1, 0
     ]);
-    let M = new Uint32Array([
-        1,0,0,0,
-        0,1,0,0,
-        0,0,0,-1,
-        0,0,0,1
-    ]);
-    let uniform = multiplyMatrix4x4(objectCube.parallel,M);
     let indices = new Uint16Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]);
     // Prepare vertex buffer
     let vertexBuffer = gl.createBuffer();
@@ -146,7 +139,7 @@ MySample.main = (function() {
     out vec4 vColor;
     void main()
     {
-    gl_Position = aPosition;
+    gl_Position = uParallel * aPosition;
     vColor = aColor;
     }`;
 
@@ -177,7 +170,7 @@ MySample.main = (function() {
     gl.linkProgram(shaderProgram);
     gl.useProgram(shaderProgram);
     let location = gl.getUniformLocation(shaderProgram, 'uParallel');
-    gl.uniformMatrix4fv(location,false,transposeMatrix4x4(uniform));
+    gl.uniformMatrix4fv(location,false,transposeMatrix4x4(objectCube.parallel));
     
     // Specify Shader & Buffer objectCube Attributes
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
