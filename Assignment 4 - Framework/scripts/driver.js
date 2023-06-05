@@ -12,44 +12,114 @@ MySample.main = (function() {
         parallel: new Float32Array([]),
         perspective: new Float32Array([]),
     };
+    // tetrahedron
+    // -0.5, 0.0, 0.5, 1.0,
+        // 0.0, 0.0, 0.0, 1.0,
+        // 0.0, 0.5, 0.5, 1.0,
+
+        // 0.0, 0.0, 0.0, 1.0,
+        // 0.5, 0.0, 0.5, 1.0,
+        // 0.0, 0.5, 0.5, 1.0,
+
+        // 0.5, 0.0, 0.5, 1.0,
+        // -0.5, 0.0, 0.5, 1.0,
+        // 0.0, 0.5, 0.5, 1.0,
+
+        // 0.0, 0.0, 0.0, 1.0,
+        // -0.5, 0.0, 0.5, 1.0,
+        // 0.5, 0.0, 0.5, 1.0,
+    
     objectCube.vertices = new Float32Array([
         0.5, 0.5, 0.0, 1.0,
         -0.5, 0.5, 0.0, 1.0,
         -0.5, -0.5, 0.0, 1.0,
         -0.5, -0.5, 0.0, 1.0,
         0.5, -0.5, 0.0, 1.0,
-        0.5, 0.5, 0.0, 1.0, // End of Front face
+        0.5, 0.5, 0.0, 1.0, //End of Front face
         0.5, 0.5, 1.0, 1.0,
         -0.5, 0.5, 1.0, 1.0,
         -0.5, -0.5, 1.0, 1.0,
         -0.5, -0.5, 1.0, 1.0,
         0.5, -0.5, 1.0, 1.0,
         0.5, 0.5, 1.0, 1.0, // End of Back face
-
+        0.5, 0.5, 1.0, 1.0,
+        0.5, 0.5, 0.0, 1.0,
+        0.5, -0.5, 0.0, 1.0,
+        0.5, -0.5, 0.0, 1.0,
+        0.5, -0.5, 1.0, 1.0,
+        0.5, 0.5, 1.0, 1.0, // End of right face
+        -0.5, 0.5, 1.0, 1.0,
+        -0.5, 0.5, 0.0, 1.0,
+        -0.5, -0.5, 0.0, 1.0,
+        -0.5, -0.5, 0.0, 1.0,
+        -0.5, -0.5, 1.0, 1.0,
+        -0.5, 0.5, 1.0, 1.0, // End of Left face
+        -0.5, 0.5, 0.0, 1.0,
+        -0.5, 0.5, 1.0, 1.0,
+        0.5, 0.5, 1.0, 1.0,
+        -0.5, 0.5, 0.0, 1.0,
+        0.5, 0.5, 0.0, 1.0,
+        0.5, 0.5, 1.0, 1.0, // End of top face
+        -0.5, -0.5, 0.0, 1.0,
+        -0.5, -0.5, 1.0, 1.0,
+        0.5, -0.5, 1.0, 1.0,
+        -0.5, -0.5, 0.0, 1.0,
+        0.5, -0.5, 0.0, 1.0,
+        0.5, -0.5, 1.0, 1.0, // End of bottom face
     ]);
+    
     objectCube.vertexColors = new Float32Array([
         1.0, 0.0, 0.0,
         0.0, 1.0, 0.0,
         0.0, 0.0, 1.0,
         0.0, 0.0, 1.0,
         0.0, 1.0, 0.0,
+        1.0, 0.0, 0.0,
+        1.0, 0.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 0.0, 1.0,
+        0.0, 0.0, 1.0,
+        0.0, 1.0, 0.0,
+        1.0, 0.0, 0.0,
+        1.0, 0.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 0.0, 1.0,
+        0.0, 0.0, 1.0,
+        0.0, 1.0, 0.0,
+        1.0, 0.0, 0.0,
+        1.0, 0.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 0.0, 1.0,
+        0.0, 0.0, 1.0,
+        0.0, 1.0, 0.0,
+        1.0, 0.0, 0.0,
+        1.0, 0.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 0.0, 1.0,
+        0.0, 0.0, 1.0,
+        0.0, 1.0, 0.0,
+        1.0, 0.0, 0.0,
+        1.0, 0.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 0.0, 1.0,
+        0.0, 0.0, 1.0,
+        0.0, 1.0, 0.0,
         1.0, 0.0, 0.0
-        
     ]);
-    objectCube.parallel = new Float32Array([
-        2/(objectCube.vertices[0]-objectCube.vertices[4]), 0, 0, -((objectCube.vertices[4]+objectCube.vertices[0])/(objectCube.vertices[0] - objectCube.vertices[4])),
-        0, 2/(objectCube.vertexColors[1]-objectCube.vertices[9]), 0, -((objectCube.vertices[1]+objectCube.vertices[9])/(objectCube.vertices[1] - objectCube.vertices[9])),
-        0, 0, 2/(objectCube.vertices[26] - objectCube.vertices[2]), -((objectCube.vertices[26]+objectCube.vertices[0])/(objectCube.vertices[26] - objectCube.vertices[0])),
+    objectCube.parallel = new Uint32Array([
+        2/(0.5-(-0.5)), 0, 0, 0,
+        0, 2/(0.5-(-0.5)), 0, 0,
+        0, 0, 2/(1 - 0), -((1+0)/(1-0)),
         0, 0, 0, 1
     ]);
-    let M = new Float32Array([
+    let M = new Uint32Array([
         1,0,0,0,
         0,1,0,0,
         0,0,0,-1,
         0,0,0,1
     ]);
     let uniform = multiplyMatrix4x4(objectCube.parallel,M);
-    let indices = new Uint16Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    let indices = new Uint16Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]);
     // Prepare vertex buffer
     let vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
@@ -70,15 +140,17 @@ MySample.main = (function() {
 
     // Prepare Vertex Shader
     let vertexShaderSource = `#version 300 es
-    uniform mat4 uParallel
+    uniform mat4 uParallel;
     in vec4 aPosition;
     in vec4 aColor;
     out vec4 vColor;
     void main()
     {
-    gl_Position = uParallel * aPosition;
+    gl_Position = aPosition;
     vColor = aColor;
     }`;
+
+    
     
     let vertexShader = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(vertexShader,vertexShaderSource);
@@ -100,12 +172,12 @@ MySample.main = (function() {
     
     // Shader Program
     let shaderProgram = gl.createProgram();
-    let location = gl.getUniformLocation(shaderProgram, 'uParallel');
-    gl.uniformMatrix4fv(location,false,transposeMatrix4x4(uniform));
     gl.attachShader(shaderProgram, vertexShader);
     gl.attachShader(shaderProgram, fragmentShader);
     gl.linkProgram(shaderProgram);
     gl.useProgram(shaderProgram);
+    let location = gl.getUniformLocation(shaderProgram, 'uParallel');
+    gl.uniformMatrix4fv(location,false,transposeMatrix4x4(uniform));
     
     // Specify Shader & Buffer objectCube Attributes
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
