@@ -203,7 +203,7 @@ MySample.main = (function() {
     gl.attachShader(shaderProgram, fragmentShader);
     gl.linkProgram(shaderProgram);
     gl.useProgram(shaderProgram);
-    let location = gl.getUniformLocation(shaderProgram, 'uCombined');
+    let location = gl.getUniformLocation(shaderProgram, 'uParallel');
     gl.uniformMatrix4fv(location,false,transposeMatrix4x4(objectCube.parallel));
     let location2 = gl.getUniformLocation(shaderProgram, 'uView');
     gl.uniformMatrix4fv(location2,false,transposeMatrix4x4(mCameraView));
