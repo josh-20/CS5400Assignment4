@@ -113,18 +113,22 @@ MySample.main = (function() {
     let b = -1.0;
     let r = 1.0;
     let l = -1.0;
+    // parallel projection
     objectCube.parallel = new Float32Array([
         2.0/(r-t), 0, 0, -((l+r)/(r-l)),
         0, 2/(t-b), 0, -((t+b)/(t-b)),
         0, 0, -2/(f-n), -((f+n)/(f-n)),
         0, 0, 0, 1
     ]);
+    // perspective projection
     objectCube.perspective = new Float32Array([
         n/0.5, 0.0, 0.0, 0.0,
         0.0, n/0.5, 0.0, 0.0,
         0.0, 0.0, -((f+n)/(f+n)), (-2.0*f*n)/(f-n),
         0.0, 0.0, -1.0, 0.0
     ]);
+
+    // Camera View
     let mCameraView = new Float32Array([
         1.0, 0.0, 0.0, 0.0,
         0.0, 1.0, 0.0, 0.0,
@@ -132,6 +136,7 @@ MySample.main = (function() {
         0.0, 0.0, 0.0, 1.0
 
     ]);
+    // rotate about the y-axis
     objectCube.model = new Float32Array([
         Math.cos(20), -Math.sin(20),0,0,
         Math.sin(20), Math.cos(20), 0, 0,
