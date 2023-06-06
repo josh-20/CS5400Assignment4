@@ -5,6 +5,9 @@ MySample.main = (function() {
     let canvas = document.getElementById('canvas-main');
     let gl = canvas.getContext('webgl2');
 
+    let previousTime = performance.now();
+    let rotation = 180;
+
     let objectCube = {
         vertices: new Float32Array([]),
         vertexColors: new Float32Array([]),
@@ -37,45 +40,45 @@ MySample.main = (function() {
         -0.5, -0.5, 0.0, 1.0,
         0.5, -0.5, 0.0, 1.0,
         0.5, 0.5, 0.0, 1.0, //End of Front face
-        0.5, 0.5, -0.5, 1.0,
-        -0.5, 0.5, -0.5, 1.0,
-        -0.5, -0.5, -0.5, 1.0,
-        -0.5, -0.5, -0.5, 1.0,
-        0.5, -0.5, -0.5, 1.0,
-        0.5, 0.5, -0.5, 1.0, // End of Back face
-        0.5, 0.5, -0.5, 1.0,
+        0.5, 0.5, 0.5, 1.0,
+        -0.5, 0.5, 0.5, 1.0,
+        -0.5, -0.5, 0.5, 1.0,
+        -0.5, -0.5, 0.5, 1.0,
+        0.5, -0.5, 0.5, 1.0,
+        0.5, 0.5, 0.5, 1.0, // End of Back face
+        0.5, 0.5, 0.5, 1.0,
         0.5, 0.5, 0.0, 1.0,
         0.5, -0.5, 0.0, 1.0,
         0.5, -0.5, 0.0, 1.0,
-        0.5, -0.5, -0.5, 1.0,
-        0.5, 0.5, -0.5, 1.0, // End of right face
-        -0.5, 0.5, -0.5, 1.0,
+        0.5, -0.5, 0.5, 1.0,
+        0.5, 0.5, 0.5, 1.0, // End of right face
+        -0.5, 0.5, 0.5, 1.0,
         -0.5, 0.5, 0.0, 1.0,
         -0.5, -0.5, 0.0, 1.0,
         -0.5, -0.5, 0.0, 1.0,
-        -0.5, -0.5, -0.5, 1.0,
-        -0.5, 0.5, -0.5, 1.0, // End of Left face
+        -0.5, -0.5, 0.5, 1.0,
+        -0.5, 0.5, 0.5, 1.0, // End of Left face
         -0.5, 0.5, 0.0, 1.0,
-        -0.5, 0.5, -0.5, 1.0,
-        0.5, 0.5, -0.5, 1.0,
+        -0.5, 0.5, 0.5, 1.0,
+        0.5, 0.5, 0.5, 1.0,
         -0.5, 0.5, 0.0, 1.0,
         0.5, 0.5, 0.0, 1.0,
-        0.5, 0.5, -0.5, 1.0, // End of top face
+        0.5, 0.5, 0.5, 1.0, // End of top face
         -0.5, -0.5, 0.0, 1.0,
-        -0.5, -0.5, -0.5, 1.0,
-        0.5, -0.5, -0.5, 1.0,
+        -0.5, -0.5, 0.5, 1.0,
+        0.5, -0.5, 0.5, 1.0,
         -0.5, -0.5, 0.0, 1.0,
         0.5, -0.5, 0.0, 1.0,
-        0.5, -0.5, -0.5, 1.0, // End of bottom face
+        0.5, -0.5, 0.5, 1.0, // End of bottom face
     ]);
     
     objectCube.vertexColors = new Float32Array([
-        1.0, 0.0, 0.0,
         0.0, 1.0, 0.0,
-        0.0, 0.0, 1.0,
-        0.0, 0.0, 1.0,
         0.0, 1.0, 0.0,
-        1.0, 0.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 1.0, .0,
+        0.0, 1.0, 0.0,
+        0.0, 1.0, 0.0,
         1.0, 0.0, 0.0,
         0.0, 1.0, 0.0,
         0.0, 0.0, 1.0,
@@ -107,15 +110,15 @@ MySample.main = (function() {
         0.0, 1.0, 0.0,
         1.0, 0.0, 0.0
     ]);
-    let n = -1.0;
-    let f = -10.0;
+    let n = -0.5;
+    let f = 10.0;
     let t = 1.0;
     let b = -1.0;
     let r = 1.0;
     let l = -1.0;
     // parallel projection
     objectCube.parallel = new Float32Array([
-        2.0/(r-t), 0, 0, -((l+r)/(r-l)),
+        2.0/(r-l), 0, 0, -((l+r)/(r-l)),
         0, 2/(t-b), 0, -((t+b)/(t-b)),
         0, 0, -2/(f-n), -((f+n)/(f-n)),
         0, 0, 0, 1
@@ -138,9 +141,9 @@ MySample.main = (function() {
     ]);
     // rotate about the y-axis
     objectCube.model = new Float32Array([
-        Math.cos(20), -Math.sin(20),0,0,
-        Math.sin(20), Math.cos(20), 0, 0,
-        0, 0, 1, 0,
+        1, 0, 0, 0,
+        0, Math.cos(rotation), -Math.sin(rotation), 0,
+        0, Math.sin(rotation), Math.cos(rotation), -1,
         0, 0, 0, 1
     ])
     
@@ -165,7 +168,7 @@ MySample.main = (function() {
 
     // Prepare Vertex Shader
     let vertexShaderSource = `#version 300 es
-    uniform mat4 uParallel;
+    uniform mat4 uProj;
     uniform mat4 uView;
     uniform mat4 uModel;
     in vec4 aPosition;
@@ -173,12 +176,9 @@ MySample.main = (function() {
     out vec4 vColor;
     void main()
     {
-    gl_Position = uParallel * uView * uModel * aPosition;
+    gl_Position = uProj * uView * uModel * aPosition;
     vColor = aColor;
     }`;
-
-    
-    
     let vertexShader = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(vertexShader,vertexShaderSource);
     gl.compileShader(vertexShader);
@@ -203,7 +203,7 @@ MySample.main = (function() {
     gl.attachShader(shaderProgram, fragmentShader);
     gl.linkProgram(shaderProgram);
     gl.useProgram(shaderProgram);
-    let location = gl.getUniformLocation(shaderProgram, 'uParallel');
+    let location = gl.getUniformLocation(shaderProgram, 'uProj');
     gl.uniformMatrix4fv(location,false,transposeMatrix4x4(objectCube.parallel));
     let location2 = gl.getUniformLocation(shaderProgram, 'uView');
     gl.uniformMatrix4fv(location2,false,transposeMatrix4x4(mCameraView));
@@ -242,8 +242,7 @@ MySample.main = (function() {
     // Scene updates go here.
     //
     //------------------------------------------------------------------
-    function update() {
-
+    function update(elapsedtime) {
     }
 
     //------------------------------------------------------------------
@@ -274,7 +273,10 @@ MySample.main = (function() {
     //
     //------------------------------------------------------------------
     function animationLoop(time) {
-        update();
+        let elapsedtime = time - previousTime;
+        previousTime = time;
+
+        update(elapsedtime);
         render();
 
         //requestAnimationFrame(animationLoop);
