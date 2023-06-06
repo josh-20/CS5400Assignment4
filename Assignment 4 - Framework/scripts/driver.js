@@ -6,7 +6,7 @@ MySample.main = (function() {
     let gl = canvas.getContext('webgl2');
 
     let previousTime = performance.now();
-    let rotation = 180;
+    let rotation = 50;
 
     let objectCube = {
         vertices: new Float32Array([]),
@@ -71,47 +71,49 @@ MySample.main = (function() {
         0.5, -0.5, 0.0, 1.0,
         0.5, -0.5, 0.5, 1.0, // End of bottom face
     ]);
+
+
     
     objectCube.vertexColors = new Float32Array([
+        1.0, 0.0, 0.0,
         0.0, 1.0, 0.0,
-        0.0, 1.0, 0.0,
-        0.0, 1.0, 0.0,
-        0.0, 1.0, .0,
-        0.0, 1.0, 0.0,
+        1.0, 0.0, 1.0,
         0.0, 1.0, 0.0,
         1.0, 0.0, 0.0,
         0.0, 1.0, 0.0,
         0.0, 0.0, 1.0,
+        0.0, 1.0, 0.0,
+        1.0, 0.0, 0.0,
+        0.0, 1.0, 0.0,
         0.0, 0.0, 1.0,
         0.0, 1.0, 0.0,
         1.0, 0.0, 0.0,
-        1.0, 0.0, 0.0,
         0.0, 1.0, 0.0,
-        0.0, 0.0, 1.0,
         0.0, 0.0, 1.0,
         0.0, 1.0, 0.0,
         1.0, 0.0, 0.0,
-        1.0, 0.0, 0.0,
         0.0, 1.0, 0.0,
-        0.0, 0.0, 1.0,
         0.0, 0.0, 1.0,
         0.0, 1.0, 0.0,
         1.0, 0.0, 0.0,
-        1.0, 0.0, 0.0,
         0.0, 1.0, 0.0,
-        0.0, 0.0, 1.0,
         0.0, 0.0, 1.0,
         0.0, 1.0, 0.0,
         1.0, 0.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 0.0, 1.0,
+        0.0, 1.0, 0.0,
         1.0, 0.0, 0.0,
         0.0, 1.0, 0.0,
         0.0, 0.0, 1.0,
-        0.0, 0.0, 1.0,
         0.0, 1.0, 0.0,
-        1.0, 0.0, 0.0
+        1.0, 0.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 0.0, 1.0,
+        0.0, 1.0, 0.0
     ]);
-    let n = -0.5;
-    let f = 10.0;
+    let n = 0.5;
+    let f = -10.0;
     let t = 1.0;
     let b = -1.0;
     let r = 1.0;
@@ -125,11 +127,24 @@ MySample.main = (function() {
     ]);
     // perspective projection
     objectCube.perspective = new Float32Array([
-        n/0.5, 0.0, 0.0, 0.0,
-        0.0, n/0.5, 0.0, 0.0,
-        0.0, 0.0, -((f+n)/(f+n)), (-2.0*f*n)/(f-n),
+        n/r, 0.0, 0.0, 0.0,
+        0.0, n/t, 0.0, 0.0,
+        0.0, 0.0, -(f+n)/(f-n), (-2.0*f*n)/(f-n),
         0.0, 0.0, -1.0, 0.0
     ]);
+    let rotationYZ = new Float32Array([
+        1, 0, 0, 0,
+        0, Math.cos(rotation), -Math.sin(rotation), 0,
+        0, Math.sin(rotation), Math.cos(rotation), -1,
+        0, 0, 0, 1
+    ]);
+
+    let rotationXZ = new Float32Array([
+        Math.cos(rotation), 0, Math.sin(rotation), 0,
+        0, 1, 0, 0,
+        -Math.sin(rotation), 0, Math.cos(rotation), 0,
+        0, 0, 0, 1
+    ])
 
     // Camera View
     let mCameraView = new Float32Array([
@@ -140,12 +155,7 @@ MySample.main = (function() {
 
     ]);
     // rotate about the y-axis
-    objectCube.model = new Float32Array([
-        1, 0, 0, 0,
-        0, Math.cos(rotation), -Math.sin(rotation), 0,
-        0, Math.sin(rotation), Math.cos(rotation), -1,
-        0, 0, 0, 1
-    ])
+    objectCube.model = rotationYZ;
     
     let indices = new Uint16Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]);
     // Prepare vertex buffer
@@ -204,7 +214,7 @@ MySample.main = (function() {
     gl.linkProgram(shaderProgram);
     gl.useProgram(shaderProgram);
     let location = gl.getUniformLocation(shaderProgram, 'uProj');
-    gl.uniformMatrix4fv(location,false,transposeMatrix4x4(objectCube.parallel));
+    gl.uniformMatrix4fv(location,false,transposeMatrix4x4(objectCube.perspective));
     let location2 = gl.getUniformLocation(shaderProgram, 'uView');
     gl.uniformMatrix4fv(location2,false,transposeMatrix4x4(mCameraView));
     let location3 = gl.getUniformLocation(shaderProgram,'uModel');
