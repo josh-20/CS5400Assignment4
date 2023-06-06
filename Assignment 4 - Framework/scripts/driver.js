@@ -109,10 +109,10 @@ MySample.main = (function() {
     ]);
     let n = -1.0;
     let f = -10.0;
-    let t = 0.5;
-    let b = -0.5;
-    let r = 0.5;
-    let l = -0.5;
+    let t = 1.0;
+    let b = -1.0;
+    let r = 1.0;
+    let l = -1.0;
     objectCube.parallel = new Float32Array([
         2.0/(r-t), 0, 0, -((l+r)/(r-l)),
         0, 2/(t-b), 0, -((t+b)/(t-b)),
@@ -125,16 +125,20 @@ MySample.main = (function() {
         0.0, 0.0, -((f+n)/(f+n)), (-2.0*f*n)/(f-n),
         0.0, 0.0, -1.0, 0.0
     ]);
-    let mCameraView = new Uint32Array([
+    let mCameraView = new Float32Array([
         1.0, 0.0, 0.0, 0.0,
         0.0, 1.0, 0.0, 0.0,
         0.0, 0.0, 1.0, 0.0,
         0.0, 0.0, 0.0, 1.0
 
     ]);
+    objectCube.model = new Float32Array([
+        Math.cos(20), -Math.sin(20),0,0,
+        Math.sin(20), Math.cos(20), 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    ])
     
-
-    let combinedMatrix = multiplyMatrix4x4(objectCube.parallel, mCameraView);
     let indices = new Uint16Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]);
     // Prepare vertex buffer
     let vertexBuffer = gl.createBuffer();
@@ -156,13 +160,15 @@ MySample.main = (function() {
 
     // Prepare Vertex Shader
     let vertexShaderSource = `#version 300 es
-    uniform mat4 uCombined;
+    uniform mat4 uParallel;
+    uniform mat4 uView;
+    uniform mat4 uModel;
     in vec4 aPosition;
     in vec4 aColor;
     out vec4 vColor;
     void main()
     {
-    gl_Position = uCombined * aPosition;
+    gl_Position = uParallel * uView * uModel * aPosition;
     vColor = aColor;
     }`;
 
@@ -193,7 +199,11 @@ MySample.main = (function() {
     gl.linkProgram(shaderProgram);
     gl.useProgram(shaderProgram);
     let location = gl.getUniformLocation(shaderProgram, 'uCombined');
-    gl.uniformMatrix4fv(location,false,transposeMatrix4x4(combinedMatrix));
+    gl.uniformMatrix4fv(location,false,transposeMatrix4x4(objectCube.parallel));
+    let location2 = gl.getUniformLocation(shaderProgram, 'uView');
+    gl.uniformMatrix4fv(location2,false,transposeMatrix4x4(mCameraView));
+    let location3 = gl.getUniformLocation(shaderProgram,'uModel');
+    gl.uniformMatrix4fv(location3,false,transposeMatrix4x4(objectCube.model));
     
     // Specify Shader & Buffer objectCube Attributes
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
