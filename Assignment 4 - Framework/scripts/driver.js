@@ -6,7 +6,7 @@ MySample.main = (function() {
     let gl = canvas.getContext('webgl2');
 
     let previousTime = performance.now();
-    let rotation = 50;
+    let rotation = 90;
 
     let objectCube = {
         vertices: new Float32Array([]),
