@@ -1,10 +1,7 @@
 
+MySample.utilities = {
 
-//------------------------------------------------------------------
-//
-// Helper function used to load a file from the server
-//
-//------------------------------------------------------------------
+}
 function loadFileFromServer(filename) {
     return fetch(filename)
         .then(res => res.text());
@@ -53,6 +50,11 @@ function multiplyMatrix4x4(m1, m2) {
     r[15] = m1[12] * m2[3] + m1[13] * m2[7] + m1[14] * m2[11] + m1[15] * m2[15];
 
     return r;
+//------------------------------------------------------------------
+//
+// Helper function used to load a file from the server
+//
+//------------------------------------------------------------------
 }
 
 //------------------------------------------------------------------
