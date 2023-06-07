@@ -210,9 +210,9 @@ MySample.main = (function() {
     // translate to then rotate
 
     // Cube
-    // object.indices = new Uint16Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]);
-    // object.vertexColors = cubColors;
-    // object. vertices = cube;
+    object.indices = new Uint16Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]);
+    object.vertexColors = cubColors;
+    object. vertices = cube;
 
     // Tetahedron
     // object.vertices = tetrahedron;
@@ -220,9 +220,9 @@ MySample.main = (function() {
     // object.vertexColors = tetrahedronColor;
 
 
-    object.vertices = octahedron;
-    object.indices = new Uint16Array([ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]);
-    object.vertexColors = octahedronColor;
+    // object.vertices = octahedron;
+    // object.indices = new Uint16Array([ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]);
+    // object.vertexColors = octahedronColor;
 
 
     // Prepare vertex buffer
@@ -281,7 +281,7 @@ MySample.main = (function() {
     gl.linkProgram(shaderProgram);
     gl.useProgram(shaderProgram);
     let location = gl.getUniformLocation(shaderProgram, 'uProj');
-    gl.uniformMatrix4fv(location,false,transposeMatrix4x4(object.perspective));
+    gl.uniformMatrix4fv(location,false,transposeMatrix4x4(object.parallel));
     let location2 = gl.getUniformLocation(shaderProgram, 'uView');
     gl.uniformMatrix4fv(location2,false,transposeMatrix4x4(mCameraView));
     
