@@ -7,6 +7,7 @@ MySample.main = (function() {
 
     let previousTime = performance.now();
     let rotation = 0;
+    let i = 0;
     let object = {
         vertices: new Float32Array([]),
         vertexColors: new Float32Array([]),
@@ -210,103 +211,21 @@ MySample.main = (function() {
     // translate to then rotate
 
     // Cube
-    object.indices = new Uint16Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]);
-    object.vertexColors = cubColors;
-    object. vertices = cube;
 
     // Tetahedron
     // object.vertices = tetrahedron;
     // object.indices = new Uint16Array([0, 1, 2, 0, 2, 3, 0, 3, 1, 1, 3, 2]);
     // object.vertexColors = tetrahedronColor;
-
-
+    // object.indices = new Uint16Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]);
+    // object.vertexColors = cubColors;
+    // object. vertices = cube;
     // object.vertices = octahedron;
     // object.indices = new Uint16Array([ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]);
     // object.vertexColors = octahedronColor;
 
 
     // Prepare vertex buffer
-    let vertexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER,object.vertices, gl.STATIC_DRAW);
-    gl.bindBuffer(gl.ARRAY_BUFFER,null);
-
-    // Prepare Color Buffer
-    let vertexColorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER,vertexColorBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER,object.vertexColors,gl.STATIC_DRAW);
-    gl.bindBuffer(gl.ARRAY_BUFFER,null);
-    
-    // Prepare Index Buffer
-    let indexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,object.indices,gl.STATIC_DRAW);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,null);
-
-    // Prepare Vertex Shader
-    let vertexShaderSource = `#version 300 es
-    uniform mat4 uProj;
-    uniform mat4 uView;
-    uniform mat4 uModel;
-    in vec4 aPosition;
-    in vec4 aColor;
-    out vec4 vColor;
-    void main()
-    {
-    gl_Position = uProj * uView * uModel * aPosition;
-    vColor = aColor;
-    }`;
-    let vertexShader = gl.createShader(gl.VERTEX_SHADER);
-    gl.shaderSource(vertexShader,vertexShaderSource);
-    gl.compileShader(vertexShader);
-    console.log(gl.getShaderInfoLog(vertexShader));
-    
-    // Prepare Fragment Shader
-    let fragmentShaderSource = `#version 300 es
-    precision lowp float;
-    in vec4 vColor;
-    out vec4 outColor;
-    void main()
-    {
-        outColor = vColor;
-    }`
-    let fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-    gl.shaderSource(fragmentShader, fragmentShaderSource);
-    gl.compileShader(fragmentShader);
-    
-    // Shader Program
-    let shaderProgram = gl.createProgram();
-    gl.attachShader(shaderProgram, vertexShader);
-    gl.attachShader(shaderProgram, fragmentShader);
-    gl.linkProgram(shaderProgram);
-    gl.useProgram(shaderProgram);
-    let location = gl.getUniformLocation(shaderProgram, 'uProj');
-    gl.uniformMatrix4fv(location,false,transposeMatrix4x4(object.parallel));
-    let location2 = gl.getUniformLocation(shaderProgram, 'uView');
-    gl.uniformMatrix4fv(location2,false,transposeMatrix4x4(mCameraView));
-    
-    // Specify Shader & Buffer object Attributes
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-    let position = gl.getAttribLocation(shaderProgram, 'aPosition');
-    gl.enableVertexAttribArray(position);
-    gl.vertexAttribPointer(position, 3, gl.FLOAT, false, object.vertices.BYTES_PER_ELEMENT * 3, 0);
-    
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexColorBuffer);
-    let color = gl.getAttribLocation(shaderProgram, 'aColor');
-    gl.enableVertexAttribArray(color);
-    gl.vertexAttribPointer(color, 3, gl.FLOAT, false, object.vertexColors.BYTES_PER_ELEMENT * 3, 0);
-    
-    
-    function transposeMatrix4x4(m) {
-        let t = [
-            m[0], m[4], m[8], m[12],
-            m[1], m[5], m[9], m[13],
-            m[2], m[6], m[10], m[14],
-            m[3], m[7], m[11], m[15]
-        ];
-        return t;
-    }
-    
+   
     
     
     // Request Animation Frame
@@ -317,7 +236,21 @@ MySample.main = (function() {
     // Scene updates go here.
     //
     //------------------------------------------------------------------
+    function transposeMatrix4x4(m) {
+        let t = [
+            m[0], m[4], m[8], m[12],
+            m[1], m[5], m[9], m[13],
+            m[2], m[6], m[10], m[14],
+            m[3], m[7], m[11], m[15]
+        ];
+        return t;
+    }
+    let vertexBuffer = gl.createBuffer();
+    let vertexColorBuffer = gl.createBuffer();
+    let indexBuffer = gl.createBuffer();
+
     function update(elapsedtime) {
+        let typeOfProject = object.parallel;
         let rotationYZ = new Float32Array([
             1, 0, 0, 0,
             0, Math.cos(rotation), -Math.sin(rotation), 0,
@@ -331,6 +264,102 @@ MySample.main = (function() {
             -Math.sin(rotation), 0, Math.cos(rotation), 0,
             0, 0, 0, 1
         ])
+         // Prepare vertex buffer
+         if(i < 500){
+            object.indices = new Uint16Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]);
+            object.vertexColors = cubColors;
+            object. vertices = cube;
+            if (i > 250){
+                typeOfProject = object.perspective
+            }
+         }
+         else if(i > 500 && i < 1000){
+             // Tetahedron
+            object.vertices = tetrahedron;
+            object.indices = new Uint16Array([0, 1, 2, 0, 2, 3, 0, 3, 1, 1, 3, 2]);
+            object.vertexColors = tetrahedronColor;
+            if (i > 750){
+                typeOfProject = object.perspective
+            }
+         }
+         else if( i > 1000 && i < 1500){
+            object.vertices = octahedron;
+            object.indices = new Uint16Array([ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]);
+            object.vertexColors = octahedronColor;
+            if (i > 1250){
+                typeOfProject = object.perspective
+            }
+         }
+         else{ i = 0}
+         i+= elapsedtime/10;
+         console.log(i);
+         gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+         gl.bufferData(gl.ARRAY_BUFFER,object.vertices, gl.STATIC_DRAW);
+         gl.bindBuffer(gl.ARRAY_BUFFER,null);
+     
+         // Prepare Color Buffer
+         gl.bindBuffer(gl.ARRAY_BUFFER,vertexColorBuffer);
+         gl.bufferData(gl.ARRAY_BUFFER,object.vertexColors,gl.STATIC_DRAW);
+         gl.bindBuffer(gl.ARRAY_BUFFER,null);
+         
+         // Prepare Index Buffer
+         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,object.indices,gl.STATIC_DRAW);
+         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,null);
+     
+         // Prepare Vertex Shader
+         let vertexShaderSource = `#version 300 es
+         uniform mat4 uProj;
+         uniform mat4 uView;
+         uniform mat4 uModel;
+         in vec4 aPosition;
+         in vec4 aColor;
+         out vec4 vColor;
+         void main()
+         {
+         gl_Position = uProj * uView * uModel * aPosition;
+         vColor = aColor;
+         }`;
+         let vertexShader = gl.createShader(gl.VERTEX_SHADER);
+         gl.shaderSource(vertexShader,vertexShaderSource);
+         gl.compileShader(vertexShader);
+         console.log(gl.getShaderInfoLog(vertexShader));
+         
+         // Prepare Fragment Shader
+         let fragmentShaderSource = `#version 300 es
+         precision lowp float;
+         in vec4 vColor;
+         out vec4 outColor;
+         void main()
+         {
+             outColor = vColor;
+         }`
+         let fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+         gl.shaderSource(fragmentShader, fragmentShaderSource);
+         gl.compileShader(fragmentShader);
+         
+         // Shader Program
+         let shaderProgram = gl.createProgram();
+         gl.attachShader(shaderProgram, vertexShader);
+         gl.attachShader(shaderProgram, fragmentShader);
+         gl.linkProgram(shaderProgram);
+         gl.useProgram(shaderProgram);
+         let location = gl.getUniformLocation(shaderProgram, 'uProj');
+         gl.uniformMatrix4fv(location,false,transposeMatrix4x4(typeOfProject));
+         let location2 = gl.getUniformLocation(shaderProgram, 'uView');
+         gl.uniformMatrix4fv(location2,false,transposeMatrix4x4(mCameraView));
+         
+         // Specify Shader & Buffer object Attributes
+         gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+         let position = gl.getAttribLocation(shaderProgram, 'aPosition');
+         gl.enableVertexAttribArray(position);
+         gl.vertexAttribPointer(position, 3, gl.FLOAT, false, object.vertices.BYTES_PER_ELEMENT * 3, 0);
+         
+         gl.bindBuffer(gl.ARRAY_BUFFER, vertexColorBuffer);
+         let color = gl.getAttribLocation(shaderProgram, 'aColor');
+         gl.enableVertexAttribArray(color);
+         gl.vertexAttribPointer(color, 3, gl.FLOAT, false, object.vertexColors.BYTES_PER_ELEMENT * 3, 0);
+         
         rotation +=  elapsedtime/1000;
         let T = multiplyMatrix4x4(translateTo, rotationXZ);
         // set model matrix to T that has been translated back
